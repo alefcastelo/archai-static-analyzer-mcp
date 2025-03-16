@@ -5,7 +5,7 @@ import { JavaASTImport } from "@/Parser/JavaAST/ASTNode/JavaASTImport";
 import { JavaASTClass } from "@/Parser/JavaAST/ASTNode/JavaASTClass";
 import { JavaASTProperty } from "@/Parser/JavaAST/ASTNode/JavaASTProperty";
 import { JavaASTMethodDeclaration } from "@/Parser/JavaAST/ASTNode/JavaASTMethodDeclaration";
-import { JavaASTMethodCall } from "./ASTNode/JavaASTMethodCall";
+import { JavaASTMethodCall } from "@/Parser/JavaAST/ASTNode/JavaASTMethodCall";
 
 export class JavaAST {
     constructor(public readonly lexer: JavaLexer) {}
