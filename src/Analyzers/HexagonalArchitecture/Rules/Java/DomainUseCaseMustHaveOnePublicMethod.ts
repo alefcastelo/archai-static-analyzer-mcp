@@ -8,18 +8,32 @@ export class JavaDomainUseCaseMustHaveOnePublicMethod implements Rule {
     }
 
     analyze(fileInfo: JavaFileInfo): null | string {
-        if (!fileInfo.packageName.getPackageName().includes("usecase")) {
+        if (!fileInfo.packageName.packageName.includes("usecase")) {
             return null;
         }
 
-        if (fileInfo.methods.length > 1) {
+        let publicMethods = 0;
+
+        for (const method of fileInfo.methodDeclarations) {
+            const isConstuctor = method.methodName === fileInfo.className.className;
+
+            if (isConstuctor) {
+                continue;
+            }
+
+            if (method.methodAccessModifier === "public") {
+                publicMethods++;
+            }
+        }
+
+        if (publicMethods > 1) {
             return "use case class must have only one public method";
         }
 
-        if (fileInfo.methods.length === 0) {
+        if (publicMethods === 0) {
             return "use case class must have at least one public method";
         }
-
+        
         return null;
     }
 }

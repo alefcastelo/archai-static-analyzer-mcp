@@ -8,11 +8,11 @@ export class JavaNonUserModelHasEmail implements Rule {
     }
 
     analyze(fileInfo: JavaFileInfo): null | string {
-        if (!fileInfo.packageName.getPackageName().includes("model")) {
+        if (!fileInfo.packageName.packageName.includes("model")) {
             return null;
         }
 
-        if (fileInfo.className.getClassName() === "User") {
+        if (fileInfo.className.className === "User") {
             return null;
         }
 

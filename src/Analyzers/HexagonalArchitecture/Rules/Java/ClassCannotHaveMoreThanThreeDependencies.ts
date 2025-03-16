@@ -8,7 +8,7 @@ export class JavaClassCannotHaveMoreThanThreeDependencies implements Rule {
     }
 
     analyze(fileInfo: JavaFileInfo): null | string {
-        const constuctorMethod = fileInfo.methods.find(method => method.methodName === fileInfo.className.getClassName());
+        const constuctorMethod = fileInfo.methodDeclarations.find(method => method.methodName === fileInfo.className.className);
 
         if (!constuctorMethod) {
             return "class must have a constructor method";

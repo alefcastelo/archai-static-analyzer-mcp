@@ -5,7 +5,8 @@ import type { JavaASTClass } from "@/Parser/JavaAST/ASTNode/JavaASTClass";
 import type { JavaASTPackage } from "@/Parser/JavaAST/ASTNode/JavaASTPackage";
 import type { JavaASTImport } from "@/Parser/JavaAST/ASTNode/JavaASTImport";
 import type { JavaASTProperty } from "@/Parser/JavaAST/ASTNode/JavaASTProperty";
-import type { JavaASTMethod } from "@/Parser/JavaAST/ASTNode/JavaASTMethod";
+import type { JavaASTMethodDeclaration } from "@/Parser/JavaAST/ASTNode/JavaASTMethodDeclaration";
+import type { JavaASTMethodCall } from "./JavaAST/ASTNode/JavaASTMethodCall";
 
 export class JavaParser {
     constructor(
@@ -19,8 +20,8 @@ export class JavaParser {
         let packageName: JavaASTPackage;
         const dependencies: JavaASTImport[] = [];
         const properties: JavaASTProperty[] = [];
-        const methods: JavaASTMethod[] = [];
-
+        const methods: JavaASTMethodDeclaration[] = [];
+        const methodCalls: JavaASTMethodCall[] = [];
         for (const node of ast) {
             if (node.type === 'class') {
                 const classNode = node as JavaASTClass;
@@ -42,9 +43,14 @@ export class JavaParser {
                 properties.push(propertyNode);
             }
 
-            if (node.type === 'method') {
-                const methodNode = node as JavaASTMethod;
+            if (node.type === 'methodDeclaration') {
+                const methodNode = node as JavaASTMethodDeclaration;
                 methods.push(methodNode);
+            }
+
+            if (node.type === 'methodCall') {
+                const methodCallNode = node as JavaASTMethodCall;
+                methodCalls.push(methodCallNode);
             }
         }
 
@@ -54,6 +60,7 @@ export class JavaParser {
             dependencies!,
             methods!,
             properties!,
+            methodCalls!,
         );
     }
 }

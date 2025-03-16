@@ -2,13 +2,7 @@ export type Token = {
     type: string;
     codeContent: string;
 }
-
-export type MethodToken = Token & {
-    methodName: string;
-    arguments: string[];
-}
-
-export type Tokens = (Token | MethodToken)[];
+export type Tokens = Token[];
 
 export class JavaLexer {
     public readonly tokens: RegExp;
@@ -23,20 +17,42 @@ export class JavaLexer {
     public static readonly classNameRegex = 'class\\s+(\\w+)';
 
     public static readonly property = 'PROPERTY';
-    public static readonly propertyRegex = '(?:public|private|protected)\\s+(?:final\\s+)?(\\w+)\\s+(\\w+)\\s*(?:\s*=\s*[^;]*)?\s*;';
+    public static readonly propertyRegex = '(\\w+)\\s+(\\w+)\\s*(?:\s*=\s*[^;]*)?\s*;';
+
+    public static readonly finalKeyword = 'FINAL';
+    public static readonly finalKeywordRegex = 'final';
+
+    public static readonly publicKeyword = 'PUBLIC';
+    public static readonly publicKeywordRegex = 'public';
+
+    public static readonly privateKeyword = 'PRIVATE';
+    public static readonly privateKeywordRegex = 'private';
+
+    public static readonly protectedKeyword = 'PROTECTED';
+    public static readonly protectedKeywordRegex = 'protected';
 
     public static readonly method = 'METHOD';
-    public static readonly methodRegex = '(?:public|private|protected)?\\s*(?:final\\s+)?(\\w+)\\s+(\\w+)\\s*\\(([^)]*)\\)\\s*\\{([\\s\\S]*?)\\}';
+    public static readonly methodRegex = '\b\w+\s+\w+\s*\([^)]*\)\s*\{[\s\S]*?\}';
     public static readonly methodNameRegex = '\\b\\w+\\b(?=\\()';
+
+    public static readonly methodArguments = 'METHOD_ARGUMENTS';
     public static readonly methodArgumentsRegex = '\\(([^)]*)\\)';
 
+    public static readonly annotation = 'ANNOTATION';
+    public static readonly annotationRegex = '@\\w+(?:\s*\\([^)]*\\))?';
 
     public readonly groupSpecification: [string, string][] = [
         [JavaLexer.packageName, JavaLexer.packageNameRegex],
         [JavaLexer.import, JavaLexer.importRegex],
         [JavaLexer.className, JavaLexer.classNameRegex],
         [JavaLexer.property, JavaLexer.propertyRegex],
-        [JavaLexer.method, JavaLexer.methodRegex],
+        [JavaLexer.method, JavaLexer.methodNameRegex],
+        [JavaLexer.methodArguments, JavaLexer.methodArgumentsRegex],
+        [JavaLexer.finalKeyword, JavaLexer.finalKeywordRegex],
+        [JavaLexer.publicKeyword, JavaLexer.publicKeywordRegex],
+        [JavaLexer.privateKeyword, JavaLexer.privateKeywordRegex],
+        [JavaLexer.protectedKeyword, JavaLexer.protectedKeywordRegex],
+        [JavaLexer.annotation, JavaLexer.annotationRegex],
     ];
 
     constructor() {
@@ -59,40 +75,10 @@ export class JavaLexer {
 
                 const codeContent = match.groups[groupName];
 
-                if (groupName === JavaLexer.method) {
-                    tokens.push(this.analyzeMethodCode(codeContent));
-                } else {
-                    tokens.push({ type: groupName, codeContent });
-                }
+                tokens.push({ type: groupName, codeContent });
             }
         }
 
         return tokens;
-    }
-
-    private analyzeMethodCode(methodCodeContent: string): MethodToken {
-        const methodNameMatch = methodCodeContent.match(JavaLexer.methodNameRegex);
-
-        if (!methodNameMatch) {
-            throw new Error(`Method name not found in method code content: ${methodCodeContent}`);
-        }
-
-        const [methodName] = methodNameMatch;
-
-        const argumentsWithParentesisMatch = methodCodeContent.match(JavaLexer.methodArgumentsRegex);
-
-        if (!argumentsWithParentesisMatch) {
-            return { type: JavaLexer.method, methodName, codeContent: methodCodeContent, arguments: [] };
-        }
-
-        const [_methodArgumentsWithParentesis, methodArgumentsWithoutParentesis] = argumentsWithParentesisMatch;
-
-        if (!methodArgumentsWithoutParentesis) {
-            return { type: JavaLexer.method, methodName, codeContent: methodCodeContent, arguments: [] };
-        }
-
-        const methodArguments = methodArgumentsWithoutParentesis.split(',')
-
-        return { type: JavaLexer.method, methodName, codeContent: methodCodeContent, arguments: methodArguments };
     }
 }

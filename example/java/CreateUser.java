@@ -3,10 +3,11 @@ package com.alefcastelo.domain.usecase;
 import com.alefcastelo.domain.model.User;
 import com.alefcastelo.infrastructure.repository.UserRepository;
 
+@Component
 public class CreateUser {
-    private final CreateUserInputValidator createUserInputValidator;
+    protected final CreateUserInputValidator createUserInputValidator;
     private final CreateUserInputAdapter createUserInputAdapter;
-    private final UserRepository userRepository;
+    protected final UserRepository userRepository;
     private final UserCreatedEventPublisher userCreatedEventPublisher;
     private final UserOutputAdapter userOutputAdapter;
 
@@ -24,7 +25,8 @@ public class CreateUser {
         this.userOutputAdapter = userOutputAdapter;
     }
     
-    public User execute(User user) {
+    @Override
+    private User execute(User user) {
         createUserInputValidator.validate(user);
         User user = createUserInputAdapter.adapt(user);
         userRepository.save(user);

@@ -8,9 +8,9 @@ export class JavaDomainPackageCannotDependsFromInfrastructurePackages implements
     }
 
     analyze(fileInfo: JavaFileInfo): null | string {
-        if (fileInfo.packageName.getPackageName().includes("domain")) {
+        if (fileInfo.packageName.packageName.includes("domain")) {
             for (const dependency of fileInfo.dependencies) {
-                if (dependency.getModuleName().includes("infrastructure")) {
+                if (dependency.moduleName.includes("infrastructure")) {
                     return "domain package cannot depends from infrastructure packages";
                 }
             }

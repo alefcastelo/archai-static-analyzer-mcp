@@ -8,11 +8,11 @@ export class JavaDomainUseCaseMustHaveSuffixUseCase implements Rule {
     }
 
     analyze(fileInfo: JavaFileInfo): null | string {
-        if (!fileInfo.packageName.getPackageName().includes("usecase")) {
+        if (!fileInfo.packageName.packageName.includes("usecase")) {
             return null;
         }
 
-        if (fileInfo.className.getClassName().endsWith("UseCase")) {
+        if (fileInfo.className.className.endsWith("UseCase")) {
             return null;
         }
 

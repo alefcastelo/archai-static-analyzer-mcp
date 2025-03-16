@@ -2,7 +2,9 @@ import { JavaASTNode } from "@/Parser/JavaAST/ASTNode/JavaASTNode";
 
 export class JavaASTProperty extends JavaASTNode {
     constructor(
-        public readonly codeContent: string
+        public readonly codeContent: string,
+        public readonly isFinal: boolean,
+        public readonly propertyAccessModifier: string,
     ) {
         super('property');
     }
