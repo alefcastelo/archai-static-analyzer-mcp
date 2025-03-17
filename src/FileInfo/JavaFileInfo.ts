@@ -8,6 +8,7 @@ import type { JavaASTMethodCall } from "@/Parser/JavaAST/ASTNode/JavaASTMethodCa
 
 export class JavaFileInfo implements FileInfo {
     constructor(
+        public readonly filepath: string,
         public readonly className: JavaASTClass,
         public readonly packageName: JavaASTPackage,
         public readonly dependencies: JavaASTImport[],

@@ -1,21 +1,17 @@
-import { HexagonalArchitectureAnalyzer } from "@/Analyzers/HexagonalArchitecture/HexagonalArchitectureAnalyzer";
-import { JavaClassCannotHaveMoreThanThreeDependencies } from "@/Analyzers/HexagonalArchitecture/Rules/Java/ClassCannotHaveMoreThanThreeDependencies";
-import { JavaDomainPackageCannotDependsFromInfrastructurePackages } from "@/Analyzers/HexagonalArchitecture/Rules/Java/DomainPackageCannotDependsFromInfrastructurePackages";
-import { JavaDomainUseCaseMustHaveOnePublicMethod } from "@/Analyzers/HexagonalArchitecture/Rules/Java/DomainUseCaseMustHaveOnePublicMethod";
-import { JavaDomainUseCaseMustHaveSuffixUseCase } from "@/Analyzers/HexagonalArchitecture/Rules/Java/DomainUseCaseMustHaveSuffixUseCase";
-import { JavaModelHasEmailAsPrimitiveType } from "@/Analyzers/HexagonalArchitecture/Rules/Java/ModelHasEmailAsPrimitiveType";
-import { JavaNonUserModelHasEmail } from "@/Analyzers/HexagonalArchitecture/Rules/Java/NonUserModelHasEmail";
 import { Analyzer } from "@/Analyzer";
 import { LanguageDetector } from "@/LanguageDetector";
 import { CodeContentParser } from "@/CodeContentParser";
+import { HexagonalArchitectureAnalyzer } from "@/Analyzers/HexagonalArchitecture/HexagonalArchitectureAnalyzer";
+import { JavaClassCannotHaveMoreThanThreeDependencies } from "@/Analyzers/HexagonalArchitecture/Rules/Java/JavaClassCannotHaveMoreThanThreeDependencies";
+import { JavaDomainPackageCannotDependsFromInfrastructurePackages } from "@/Analyzers/HexagonalArchitecture/Rules/Java/JavaDomainPackageCannotDependsFromInfrastructurePackages";
+import { JavaDomainUseCaseMustHaveOnePublicMethod } from "@/Analyzers/HexagonalArchitecture/Rules/Java/JavaDomainUseCaseMustHaveOnePublicMethod";
+import { JavaDomainUseCaseMustHaveSuffixUseCase } from "@/Analyzers/HexagonalArchitecture/Rules/Java/JavaDomainUseCaseMustHaveSuffixUseCase";
+import { JavaModelHasEmailAsPrimitiveType } from "@/Analyzers/HexagonalArchitecture/Rules/Java/JavaModelHasEmailAsPrimitiveType";
+import { JavaNonUserModelHasEmail } from "@/Analyzers/HexagonalArchitecture/Rules/Java/JavaNonUserModelHasEmail";
+import { CircularDependencyAnalyzer } from "@/Analyzers/CircularDependency/CircularDependencyAnalyzer";
+import { JavaModulesCannotHaveCircularDependency } from "@/Analyzers/CircularDependency/Rules/Java/JavaModulesCannotHaveCircularDependency";
 
-const javaFile = "example/java/CreateUser.java";
-const javaContent = await Bun.file(javaFile).text();
-
-const parser = new CodeContentParser(new LanguageDetector());
-const fileInfo = parser.parse(javaFile, javaContent);
-
-const hexagonalArchitectureStyle = new HexagonalArchitectureAnalyzer([
+const hexagonalArchitectureAnalyzer = new HexagonalArchitectureAnalyzer([
     new JavaDomainUseCaseMustHaveOnePublicMethod(),
     new JavaClassCannotHaveMoreThanThreeDependencies(),
     new JavaDomainUseCaseMustHaveSuffixUseCase(),
@@ -24,5 +20,15 @@ const hexagonalArchitectureStyle = new HexagonalArchitectureAnalyzer([
     new JavaNonUserModelHasEmail(),
 ]);
 
-const architecturalStyleCheck = new Analyzer(hexagonalArchitectureStyle);
-console.log(architecturalStyleCheck.check(fileInfo).join("\n"));
+const circularDependencyAnalyzer = new CircularDependencyAnalyzer([
+    new JavaModulesCannotHaveCircularDependency(),
+]);
+
+const directory = "/Users/alefcastelo/workspace/mcp/archai/examples/hexagonal-architecture";
+const filepath = "src/com/alefcastelo/domain/usecase/CreateUserUseCase.java";
+
+const analyzer = new Analyzer(new CodeContentParser(new LanguageDetector()));
+analyzer.addRuleGroup("hexagonal-architecture", hexagonalArchitectureAnalyzer);
+analyzer.addRuleGroup("circular-dependency", circularDependencyAnalyzer);
+
+console.log((await analyzer.analyze(directory, filepath, "hexagonal-architecture")).join("\n"));

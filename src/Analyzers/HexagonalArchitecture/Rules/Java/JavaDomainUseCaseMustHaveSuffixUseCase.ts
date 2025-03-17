@@ -7,7 +7,7 @@ export class JavaDomainUseCaseMustHaveSuffixUseCase implements Rule {
         return fileInfo.isJava();
     }
 
-    analyze(fileInfo: JavaFileInfo): null | string {
+    async analyze(fileInfo: JavaFileInfo): Promise<null | string> {
         if (!fileInfo.packageName.packageName.includes("usecase")) {
             return null;
         }

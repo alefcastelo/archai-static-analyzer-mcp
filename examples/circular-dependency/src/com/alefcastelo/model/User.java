@@ -1,10 +1,10 @@
-package com.alefcastelo.domain.model;
+package com.alefcastelo.model;
 
-class Other {
+class User {
     protected String email;
     protected String password;
 
-    public Other(String email, String password) {
+    public User(String email, String password) {
         this.email = email;
         this.password = password;
     }

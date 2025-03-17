@@ -7,7 +7,7 @@ export class JavaClassCannotHaveMoreThanThreeDependencies implements Rule {
         return fileInfo.isJava();
     }
 
-    analyze(fileInfo: JavaFileInfo): null | string {
+    async analyze(fileInfo: JavaFileInfo): Promise<null | string> {
         const constuctorMethod = fileInfo.methodDeclarations.find(method => method.methodName === fileInfo.className.className);
 
         if (!constuctorMethod) {

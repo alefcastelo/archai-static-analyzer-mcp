@@ -13,7 +13,7 @@ export class JavaParser {
         public readonly astParser: JavaAST
     ) {}
 
-    parse(content: string): FileInfo {
+    parse(filepath: string, content: string): FileInfo {
         const ast = this.astParser.parse(content);
 
         let className: JavaASTClass;
@@ -55,6 +55,7 @@ export class JavaParser {
         }
 
         return new JavaFileInfo(
+            filepath,
             className!,
             packageName!,
             dependencies!,

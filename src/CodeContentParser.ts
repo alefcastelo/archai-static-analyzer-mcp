@@ -13,11 +13,11 @@ export class CodeContentParser {
         this.javaParser = new JavaParser(new JavaAST(new JavaLexer()));
     }
 
-    parse(filename: string, content: string): FileInfo {
-        const language = this.languageDetector.detect(filename);
+    parse(filepath: string, content: string): FileInfo {
+        const language = this.languageDetector.detect(filepath);
 
         if (language.isJava()) {
-            return this.javaParser.parse(content);
+            return this.javaParser.parse(filepath, content);
         }
 
         throw new Error(`Unsupported language: ${language}`);

@@ -7,10 +7,10 @@ export class JavaDomainPackageCannotDependsFromInfrastructurePackages implements
         return fileInfo.isJava();
     }
 
-    analyze(fileInfo: JavaFileInfo): null | string {
+    async analyze(fileInfo: JavaFileInfo): Promise<null | string> {
         if (fileInfo.packageName.packageName.includes("domain")) {
             for (const dependency of fileInfo.dependencies) {
-                if (dependency.moduleName.includes("infrastructure")) {
+                if (dependency.className.includes("infrastructure")) {
                     return "domain package cannot depends from infrastructure packages";
                 }
             }

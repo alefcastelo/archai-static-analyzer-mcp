@@ -2,7 +2,7 @@ import type { RuleGroup } from "@/RuleGroup";
 import type { FileInfo } from "@/FileInfo";
 import type { Rule } from "@/Rule";
 
-export class HexagonalArchitectureAnalyzer implements RuleGroup {
+export class CircularDependencyAnalyzer implements RuleGroup {
     constructor(
         protected readonly rules: Rule[],
     ) {

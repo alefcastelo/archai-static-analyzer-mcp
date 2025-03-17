@@ -12,7 +12,6 @@ export class JavaAST {
 
     public ast: JavaASTNode[] = [];
 
-
     public parse(fileContent: string): JavaASTNode[] {
         const tokens = this.lexer.analyze(fileContent);
 
@@ -158,6 +157,9 @@ export class JavaAST {
                     break;
                 case JavaLexer.annotation:
                     metadata.push(token);
+                    break;
+                case JavaLexer.methodArguments:
+                    // Review if the method arguments is a method call
                     break;
                 default:
                     throw new Error(`Unknown token: ${token.type}`);

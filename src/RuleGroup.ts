@@ -1,5 +1,5 @@
 import type { FileInfo } from "@/FileInfo";
 
 export interface RuleGroup {
-    analyze(fileInfo: FileInfo): string[];
+    analyze(fileInfo: FileInfo): string[] | Promise<string[]>;
 }
