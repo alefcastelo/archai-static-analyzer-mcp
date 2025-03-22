@@ -1,12 +1,13 @@
-import path from "path";
+import { join } from "path";
+import { file } from "bun";
 import type { RuleGroup } from "@/RuleGroup";
-import { CodeContentParser } from "@/CodeContentParser";
+import { LanguageContentParser } from "@/LanguageContentParser";
 
 export class Analyzer {
     protected ruleGroups: Record<string, RuleGroup> = {};
 
     constructor(
-        protected codeContentParser: CodeContentParser,
+        protected codeContentParser: LanguageContentParser,
     ) {
     }
 
@@ -15,8 +16,8 @@ export class Analyzer {
     }
 
     async analyze(directory: string, filepath: string, ruleGroupName: string): Promise<string[]> {
-        const fullPath = path.join(directory, filepath);
-        const content = await Bun.file(fullPath).text();
+        const fullPath = join(directory, filepath);
+        const content = await file(fullPath).text();
         const fileInfo = this.codeContentParser.parse(fullPath, content);
         
         if (!this.ruleGroups[ruleGroupName]) {

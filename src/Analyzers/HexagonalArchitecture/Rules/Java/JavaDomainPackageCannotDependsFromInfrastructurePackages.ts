@@ -8,11 +8,16 @@ export class JavaDomainPackageCannotDependsFromInfrastructurePackages implements
     }
 
     async analyze(fileInfo: JavaFileInfo): Promise<null | string> {
-        if (fileInfo.packageName.packageName.includes("domain")) {
-            for (const dependency of fileInfo.dependencies) {
-                if (dependency.className.includes("infrastructure")) {
-                    return "domain package cannot depends from infrastructure packages";
-                }
+        const packageName = fileInfo.ast.body.find(body => body.type === "PackageDeclarationStatement");
+        const imports = fileInfo.ast.body.filter(body => body.type === "ImportDeclarationStatement");
+
+        if (packageName && !packageName.packageName.includes(".domain.")) {
+            return null
+        }
+
+        for (const importDeclaration of imports) {
+            if (importDeclaration.packageName.includes(".infrastructure.")) {
+                return "domain package cannot depends from infrastructure packages";
             }
         }
 

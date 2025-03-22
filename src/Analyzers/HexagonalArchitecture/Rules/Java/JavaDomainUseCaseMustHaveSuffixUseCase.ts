@@ -8,14 +8,14 @@ export class JavaDomainUseCaseMustHaveSuffixUseCase implements Rule {
     }
 
     async analyze(fileInfo: JavaFileInfo): Promise<null | string> {
-        if (!fileInfo.packageName.packageName.includes("usecase")) {
-            return null;
+        const classes = fileInfo.ast.body.filter(body => body.type === "ClassDeclarationStatement");
+
+        for (const classDeclaration of classes) {
+            if (!classDeclaration.className.endsWith("UseCase.java")) {
+                return "use case class must have suffix UseCase";
+            }
         }
 
-        if (fileInfo.className.className.endsWith("UseCase")) {
-            return null;
-        }
-
-        return "use case class must have suffix UseCase";
+        return null;
     }
 }

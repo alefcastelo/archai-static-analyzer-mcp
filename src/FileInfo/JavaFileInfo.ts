@@ -1,20 +1,10 @@
 import type { FileInfo } from "@/FileInfo";
-import type { JavaASTImport } from "@/Parser/JavaAST/ASTNode/JavaASTImport";
-import type { JavaASTMethodDeclaration } from "@/Parser/JavaAST/ASTNode/JavaASTMethodDeclaration";
-import type { JavaASTPackage } from "@/Parser/JavaAST/ASTNode/JavaASTPackage";
-import type { JavaASTProperty } from "@/Parser/JavaAST/ASTNode/JavaASTProperty";
-import type { JavaASTClass } from "@/Parser/JavaAST/ASTNode/JavaASTClass";
-import type { JavaASTMethodCall } from "@/Parser/JavaAST/ASTNode/JavaASTMethodCall";
+import type { Program } from "@/Parser/JavaParser/JavaAST";
 
 export class JavaFileInfo implements FileInfo {
     constructor(
         public readonly filepath: string,
-        public readonly className: JavaASTClass,
-        public readonly packageName: JavaASTPackage,
-        public readonly dependencies: JavaASTImport[],
-        public readonly methodDeclarations: JavaASTMethodDeclaration[],
-        public readonly properties: JavaASTProperty[],
-        public readonly methodCalls: JavaASTMethodCall[]
+        public readonly ast: Program,
     ) {
     }
 
